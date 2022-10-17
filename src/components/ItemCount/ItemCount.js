@@ -1,5 +1,5 @@
 import { useState } from "react";
-const ItemListContainer = ({initial, stock}) => {
+const ItemCount = ({initial, stock}) => {
 
     const [counter, setCounter] = useState(initial)
 
@@ -55,6 +55,6 @@ const ItemListContainer = ({initial, stock}) => {
     );
   }
 
-export default ItemListContainer;
+export default ItemCount;
 
 
