@@ -1,22 +1,7 @@
 import { useState } from "react";
-const ItemCount = ({initial, stock}) => {
+const ItemCount = ({initial = 1, stock = 0, onAdd}) => {
 
     const [counter, setCounter] = useState(initial)
-
-    const onAdd = () => {
-        if (counter > 0 )
-        {
-            if (stock > 0 && counter <=stock)
-            {
-                stock = stock - counter
-                alert('Items agregado al carrito:' + counter )
-            }
-            else
-            {
-                alert('No hay stock suficiente')
-            }
-        }
-    }
 
     const incrementCounter = () => {
         console.log('incrementCounter', counter)
@@ -49,7 +34,7 @@ const ItemCount = ({initial, stock}) => {
             </div>
 
             <div className="col-12">
-                <button className="btn btn-success col-12" onClick={onAdd}>Agregar al carrito</button>
+                <button className="btn btn-success col-12" onClick={() => onAdd(counter)}>Agregar al carrito</button>
             </div>
         </div>
     );
