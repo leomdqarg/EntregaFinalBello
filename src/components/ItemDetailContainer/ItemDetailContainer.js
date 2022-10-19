@@ -1,7 +1,9 @@
 import { useState, useEffect} from "react"
 import { useParams } from "react-router-dom"
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../../services/firebase'
+import { Store } from 'react-notifications-component';
 
-import { getItem } from "../../asyncMock"
 import ItemDetail from "../ItemDetail/ItemDetail.js"
 
 const ItemDetailContainer = () => {
@@ -12,9 +14,28 @@ const ItemDetailContainer = () => {
 
     useEffect(() => {
         setLoading(true)
-        getItem(itemId).then(item => {
-            setItem(item)
-        }).finally(() => {
+        const productRef = doc(db, 'products', itemId)
+        getDoc(productRef).then(doc => {
+            console.log(doc)
+            const data = doc.data()
+            const productsAdapted = {id: doc.id, ...data}
+
+            setItem(productsAdapted)
+        }).catch( error => {
+            Store.addNotification({
+                title: "Error!",
+                message: `Error de conexion intente mas tarde`,
+                type: "error",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated", "animate__fadeIn"],
+                animationOut: ["animate__animated", "animate__fadeOut"],
+                dismiss: {
+                  duration: 5000,
+                  onScreen: true
+                }
+              })
+        }).finally( () => {
             setLoading(false)
         })
     }, [itemId])

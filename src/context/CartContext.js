@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext } from "react"
+import { Store } from 'react-notifications-component';
 
 export const CartContext = createContext()
 
@@ -10,7 +11,33 @@ export const CartContextProvider = ({ children }) => {
     const addItem = (productToAdd) => {
         if(!isInCart(productToAdd.id)) {
           setCart([...cart, productToAdd])
+          Store.addNotification({
+            title: "Producto Agregado!",
+            message: `Agregado ${productToAdd.name}`,
+            type: "success",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 5000,
+              onScreen: true
+            }
+          })
         } else {
+            Store.addNotification({
+                title: "Producto Actualizado!",
+                message: `Actualizado ${productToAdd.name}`,
+                type: "success",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated", "animate__fadeIn"],
+                animationOut: ["animate__animated", "animate__fadeOut"],
+                dismiss: {
+                  duration: 5000,
+                  onScreen: true
+                }
+              })
           console.log('ya esta agregado')
           const cartUpdated = cart.map(prod => {
             if(prod.id === productToAdd.id) {

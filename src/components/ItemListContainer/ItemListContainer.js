@@ -1,7 +1,9 @@
-import { getItems } from "../../asyncMock";
+import { Store } from 'react-notifications-component';
+import { getDocs, collection, query, where } from 'firebase/firestore'
+import { db } from '../../services/firebase'
 import { useState,useEffect } from "react";
 import { useParams } from 'react-router-dom'
-import ItemCard from "../ItemCard/ItemCard.js";
+import ItemCard from "../ItemCard/ItemCard";
 const ItemListContainer = ({greetings}) => {
     const [items, setItems] = useState([])
     const [loading, setLoading] = useState(true)
@@ -10,12 +12,36 @@ const ItemListContainer = ({greetings}) => {
     console.log(categoryId);
     useEffect(() => {
         setLoading(true)
-        getItems(categoryId).then(items => {
-            setItems(items)
-        }).finally(() => {
-                setLoading(false)
-            }
-        )
+
+        const collectionRef = categoryId ? query(collection(db, 'products'), where('category', '==', categoryId)) : collection(db, 'products')
+
+        getDocs(collectionRef).then(response => {
+            console.log(response)
+
+            const productsAdapted = response.docs.map(doc => {
+                const data = doc.data()
+                return { id: doc.id, ...data}
+            })
+
+            setItems(productsAdapted)
+        }).catch( error => {
+            Store.addNotification({
+                title: "Error!",
+                message: `Error de conexion intente mas tarde`,
+                type: "error",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated", "animate__fadeIn"],
+                animationOut: ["animate__animated", "animate__fadeOut"],
+                dismiss: {
+                  duration: 5000,
+                  onScreen: true
+                }
+              })
+        }).finally( () => {
+            setLoading(false)
+        })
+
     }, [categoryId])
 
     if (loading)
