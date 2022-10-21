@@ -1,4 +1,15 @@
-export const mockData = [
+export const categoriesMockData = [
+    { name: 'Zapatos de Mujer', slug: 'woman-shoes'},
+    { name: 'Relojes de Mujer', slug: 'woman-watches'},
+    { name: 'Joyeria', slug: 'womens-jewellery'},
+    { name: 'Vestidos de Mujer', slug: 'womens-dreesses'},
+    { name: 'Camisas de Hombre', slug: 'mens-shirts'},
+    { name: 'Bolsos de Mujer', slug: 'womens-bags'},
+    { name: 'Zapatos de Hombre', slug: 'mens-shoes'},
+    { name: 'Relojes de Hombre', slug: 'mens-watches'},
+    { name: 'Anteojos de Sol', slug: 'sunglasses'},
+]
+export const productsMockData = [
     {
       name: 'NIGHT SUIT',
       description: 'NIGHT SUIT RED MICKY MOUSE..  For Girls. Fantastic Suits.',
