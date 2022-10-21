@@ -15,7 +15,7 @@ import ItemListContainer from './components/ItemListContainer/ItemListContainer.
 import ItemDetailContainer from './components/ItemDetailContainer/ItemDetailContainer.js'
 import Footer from "./components/Footer/Footer.js"
 
-import { mockData } from './mockData'
+//import { mockData } from './mockData'
 
 //export const Context = createContext()
 

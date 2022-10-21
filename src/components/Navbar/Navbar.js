@@ -1,10 +1,41 @@
+import { Store } from 'react-notifications-component';
 import { Link, NavLink } from "react-router-dom"
+import { getDocs, collection, query, where, doc } from 'firebase/firestore'
+import { useState,useEffect } from "react"
+import { db } from '../../services/firebase'
 import logo from './logo.svg';
 import CartWidget from '../CartWidget/CartWidget';
 
 import './Navbar.css'
-import React from 'react';
 const NavBar = () => {
+    const [categories, setCategories] = useState([])
+    useEffect(() => {
+        const collectionRef = collection(db, 'categories')
+        getDocs(collectionRef).then( response => {
+            console.log(response)
+                const categoriesAdapted = response.docs.map(doc => {
+                const data = doc.data()
+                return {id: doc.id, ...data}
+            })
+            setCategories(categoriesAdapted)
+        }).catch( error => {
+            console.error('error', error);
+            Store.addNotification({
+                title: "Error!",
+                message: `Error de conexion intente mas tarde`,
+                type: "error",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated", "animate__fadeIn"],
+                animationOut: ["animate__animated", "animate__fadeOut"],
+                dismiss: {
+                  duration: 5000,
+                  onScreen: true
+                }
+              })
+        })
+    }, [])
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container px-4 px-lg-5">
@@ -23,8 +54,9 @@ const NavBar = () => {
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><NavLink className="nav-link" to="/">Todos los productos</NavLink></li>
                                 <li><hr className="dropdown-divider" /></li>
-                                <li><NavLink className="nav-link" to="/categoria/buzos">Buzos</NavLink></li>
-                                <li><NavLink className="nav-link" to="/categoria/zapatillas">Zapatillas</NavLink></li>
+                                {categories.map( item => {
+                                    return <li key={item.id}><NavLink className="nav-link" to={`/categoria/${item.slug}`}>{item.name}</NavLink></li>
+                                })}
                             </ul>
                         </li>
                     </ul>

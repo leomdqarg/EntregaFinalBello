@@ -1,10 +1,12 @@
 import { Store } from 'react-notifications-component';
 import { getDocs, collection, query, where } from 'firebase/firestore'
 import { db } from '../../services/firebase'
-import { useState,useEffect } from "react";
+import { useState,useEffect } from "react"
 import { useParams } from 'react-router-dom'
-import ItemCard from "../ItemCard/ItemCard";
+import ItemCard from "../ItemCard/ItemCard"
 const ItemListContainer = ({greetings}) => {
+
+
     const [items, setItems] = useState([])
     const [loading, setLoading] = useState(true)
 
