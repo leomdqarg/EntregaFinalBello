@@ -7,12 +7,12 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBrmigFHxNHVuLrUQuCgf7YEFl12VpgN0s",
-  authDomain: "backend-mi-tiendia.firebaseapp.com",
-  projectId: "backend-mi-tiendia",
-  storageBucket: "backend-mi-tiendia.appspot.com",
-  messagingSenderId: "922722431367",
-  appId: "1:922722431367:web:10793e9c9335c4bedde322"
+  apiKey: process.env.REACT_APP_apiKey,
+  authDomain: process.env.REACT_APP_authDomain,
+  projectId: process.env.REACT_APP_projectId,
+  storageBucket: process.env.REACT_APP_storageBucket,
+  messagingSenderId: process.env.REACT_APP_messagingSenderId,
+  appId: process.env.REACT_APP_appId
 };
 
 // Initialize Firebase
