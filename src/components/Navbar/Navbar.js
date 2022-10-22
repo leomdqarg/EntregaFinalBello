@@ -1,6 +1,6 @@
 import { Store } from 'react-notifications-component';
 import { Link, NavLink } from "react-router-dom"
-import { getDocs, collection, query, where, doc } from 'firebase/firestore'
+import { getDocs, collection, query, where, doc, orderBy } from 'firebase/firestore'
 import { useState,useEffect } from "react"
 import { db } from '../../services/firebase'
 import logo from './logo.svg';
@@ -10,7 +10,7 @@ import './Navbar.css'
 const NavBar = () => {
     const [categories, setCategories] = useState([])
     useEffect(() => {
-        const collectionRef = collection(db, 'categories')
+        const collectionRef = query(collection(db, 'categories'), orderBy('name'))
         getDocs(collectionRef).then( response => {
             console.log(response)
                 const categoriesAdapted = response.docs.map(doc => {

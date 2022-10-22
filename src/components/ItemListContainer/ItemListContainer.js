@@ -4,7 +4,7 @@ import { db } from '../../services/firebase'
 import { useState,useEffect } from "react"
 import { useParams } from 'react-router-dom'
 import ItemCard from "../ItemCard/ItemCard"
-const ItemListContainer = ({greetings}) => {
+const ItemListContainer = ({greetings, showAlert=0}) => {
 
 
     const [items, setItems] = useState([])
@@ -64,9 +64,17 @@ const ItemListContainer = ({greetings}) => {
         return (
             <section className="py-5">
                 <div className="container px-4 px-lg-5 mt-5">
-                    <div className="row row-cols row-cols-12 justify-content-center">
-                        <h2 className="justify-content-center">{greetings}</h2>
-                    </div>
+                    {
+                        showAlert === 1 ? (
+                            <div class="alert alert-warning" role="alert">
+                                {greetings}
+                            </div>
+                         ) : (
+                            <div className="row row-cols row-cols-12 justify-content-center">
+                                <h2 className="justify-content-center">{greetings}</h2>
+                            </div>
+                         )
+                    }
                     <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                         {items.map( item => (
                             <ItemCard key={item.id} {...item} />
