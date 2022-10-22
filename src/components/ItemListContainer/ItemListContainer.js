@@ -66,7 +66,7 @@ const ItemListContainer = ({greetings, showAlert=0}) => {
                 <div className="container px-4 px-lg-5 mt-5">
                     {
                         showAlert === 1 ? (
-                            <div class="alert alert-warning" role="alert">
+                            <div className="alert alert-warning" role="alert">
                                 {greetings}
                             </div>
                          ) : (
