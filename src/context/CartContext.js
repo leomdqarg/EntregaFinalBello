@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from "react"
+import { useState, createContext } from "react"
 import { Store } from 'react-notifications-component';
 
 export const CartContext = createContext()
@@ -7,6 +7,8 @@ export const CartContextProvider = ({ children }) => {
     const [cart, setCart] = useState([])
     // const [totalQuantity, setTotalQuantity] = useState(0)
     console.log(cart)
+
+
 
     const addItem = (productToAdd) => {
         if(!isInCart(productToAdd.id)) {
@@ -63,12 +65,20 @@ export const CartContextProvider = ({ children }) => {
       const removeItem = (id) => {
         const cartWithoutItem = cart.filter(prod => prod.id !== id)
         setCart(cartWithoutItem)
+        Store.addNotification({
+          title: "Producto eliminado!",
+          message: `Quitado ${cartWithoutItem.name}`,
+          type: "warning",
+          insert: "top",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 5000,
+            onScreen: true
+          }
+        })
       }
-
-    //   useEffect(() => {
-    //     const totalQuantity = getTotalQuantity()
-    //     setTotalQuantity(totalQuantity)
-    //   }, [cart])
 
      const getTotalQuantity = () => {
         let totalQuantity = 0
@@ -82,12 +92,23 @@ export const CartContextProvider = ({ children }) => {
 
     const getProductQuantity = (id) => {
       const product = cart.find(prod => prod.id === id)
-
       return product?.quantity
     }
 
+    const emptyCart = () => {
+      setCart([])
+    }
+
+    const getCartTotal = () => {
+      let total = 0;
+      cart.forEach(prod => {
+        total += prod.quantity * prod.price
+      })
+      return total;
+    }
+
     return (
-        <CartContext.Provider value={{ cart, addItem, removeItem, getTotalQuantity, getProductQuantity }}>
+        <CartContext.Provider value={{ cart, addItem, removeItem, getTotalQuantity, getProductQuantity, getCartTotal, emptyCart }}>
             {children}
         </CartContext.Provider>
     )

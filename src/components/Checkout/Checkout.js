@@ -1,203 +1,241 @@
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useState } from "react";
+import { useContext } from "react"
+import { CartContext } from "../../context/CartContext"
+import { getDocs, addDoc, collection, doc, updateDoc, where, query, documentId, writeBatch } from 'firebase/firestore'
+import { db } from '../../services/firebase'
+import { Store } from 'react-notifications-component';
+
+
+
 const Checkout = () => {
+    const { cart, getTotalQuantity, getCartTotal, emptyCart } = useContext(CartContext)
+    const totalQuantity = getTotalQuantity()
+    const cartTotal = getCartTotal()
+    const [orderId, setOrderId] = useState('')
+    console.log(cart)
+
+    const createOrder = async (values, setSubmitting) => {
+        try {
+            const objOrder = {
+                buyer: {
+                    email: values.email,
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    phone: values.phone,
+                },
+                items: cart,
+                total: cartTotal
+            }
+
+            console.log(objOrder)
+
+            const ids = cart.map(prod => prod.id)
+            const productsRef = collection(db, 'products')
+
+            const productsAddedFromFirestore = await getDocs(query(productsRef, where(documentId(), 'in' , ids)))
+            const { docs } = productsAddedFromFirestore
+
+            const batch = writeBatch(db)
+            //const outOfStock = [{id: '2DRgyYrQbhKJSOeLfaOz'}]
+            const outOfStock = []
+
+            docs.forEach(doc => {
+                const dataDoc = doc.data()
+                const stockDb = dataDoc.stock
+
+                const productAddedToCart = cart.find(prod => prod.id === doc.id)
+                const prodQuantity = productAddedToCart?.quantity
+
+                if(stockDb >= prodQuantity) {
+                    batch.update(doc.ref, { stock: stockDb - prodQuantity })
+                } else {
+                    outOfStock.push({ id: doc.id, ...dataDoc})
+                }
+            })
+
+            if(outOfStock.length === 0) {
+                await batch.commit()
+
+                const orderRef = collection(db, 'orders')
+                const orderAdded = await addDoc(orderRef, objOrder)
+
+                setOrderId(orderAdded.id)
+                emptyCart()
+            } else {
+                console.log('Hay productos fuera de stock')
+                throw new Error("Uh-oh!");
+            }
+        } catch (error) {
+
+            console.log('error', error)
+            Store.addNotification({
+                title: "Error de Red",
+                message: 'Error de red. Intente mas tarde',
+                type: "danger",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated", "animate__fadeIn"],
+                animationOut: ["animate__animated", "animate__fadeOut"],
+                dismiss: {
+                  duration: 5000,
+                  onScreen: true
+                }
+            })
+            throw new Error("Uh-oh!");
+        } finally {
+            setSubmitting(false)
+        }
+    }
+
+
+
     return (
-        <main class="mt-5 pt-4">
-            <div class="container wow fadeIn">
-            <h2 class="my-5 h2 text-center">Checkout form</h2>
-            <div class="row">
-                <div class="col-md-8 mb-4">
-                <div class="card">
-                    <div class="row">
-                        <div class="col-md-6 mb-2">
-                        <div class="md-form ">
-                            <input type="text" id="firstName" class="form-control" />
-                            <label for="firstName" class="">First name</label>
-                        </div>
+        <section className="py-5">
+            <div className="container px-4 px-lg-5 mt-5">
+                <div className="row g-5">
+                    <div className="col-md-5 col-lg-4 order-md-last">
+                        <h4 className="d-flex justify-content-between align-items-center mb-3">
+                            <span className="text-primary">Mi carrito</span>
+                            <span className="badge bg-primary rounded-pill">{totalQuantity}</span>
+                        </h4>
+                        <ul className="list-group mb-3">
+                            {
+                                cart.map( item => {
+                                    return (<li className="list-group-item d-flex justify-content-between lh-sm">
+                                        <div>
+                                        <h6 className="my-0">{item.name}</h6>
+                                        <small className="text-muted">Cantidad: {item.quantity}</small>
+                                        </div>
+                                        <span className="text-muted">{item.price*item.quantity}</span>
+                                    </li>)
 
-                        </div>
-                        <div class="col-md-6 mb-2">
-                        <div class="md-form">
-                            <input type="text" id="lastName" class="form-control" />
-                            <label for="lastName" class="">Last name</label>
-                        </div>
+                                })
+                            }
+                            <li className="list-group-item d-flex justify-content-between">
+                                <span>Total</span>
+                                <strong>${cartTotal}</strong>
+                            </li>
+                        </ul>
 
-                        </div>
                     </div>
-                    <div class="md-form input-group pl-0 mb-5">
-                        <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">@</span>
-                        </div>
-                        <input type="text" class="form-control py-0" placeholder="Username" aria-describedby="basic-addon1" />
-                    </div>
-
-                    <div class="md-form mb-5">
-                        <input type="text" id="email" class="form-control" placeholder="youremail@example.com" />
-                        <label for="email" class="">Email (optional)</label>
-                    </div>
-
-                    <div class="md-form mb-5">
-                        <input type="text" id="address" class="form-control" placeholder="1234 Main St" />
-                        <label for="address" class="">Address</label>
-                    </div>
-
-                    <div class="md-form mb-5">
-                        <input type="text" id="address-2" class="form-control" placeholder="Apartment or suite" />
-                        <label for="address-2" class="">Address 2 (optional)</label>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-lg-4 col-md-12 mb-4">
-
-                        <label for="country">Country</label>
-                        <select class="custom-select d-block w-100" id="country" required>
-                            <option value="">Choose...</option>
-                            <option>United States</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            Please select a valid country.
-                        </div>
-
-                        </div>
-                        <div class="col-lg-4 col-md-6 mb-4">
-
-                        <label for="state">State</label>
-                        <select class="custom-select d-block w-100" id="state" required>
-                            <option value="">Choose...</option>
-                            <option>California</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            Please provide a valid state.
-                        </div>
-
-                        </div>
-                        <div class="col-lg-4 col-md-6 mb-4">
-
-                        <label for="zip">Zip</label>
-                        <input type="text" class="form-control" id="zip" placeholder="" required />
-                        <div class="invalid-feedback">
-                            Zip code required.
-                        </div>
-
-                        </div>
-                    </div>
-                    <hr />
-
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="same-address" />
-                        <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="save-info" />
-                        <label class="custom-control-label" for="save-info">Save this information for next time</label>
-                    </div>
-
-                    <hr />
-
-                    <div class="d-block my-3">
-                        <div class="custom-control custom-radio">
-                        <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required />
-                        <label class="custom-control-label" for="credit">Credit card</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                        <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required />
-                        <label class="custom-control-label" for="debit">Debit card</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                        <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required />
-                        <label class="custom-control-label" for="paypal">Paypal</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                        <label for="cc-name">Name on card</label>
-                        <input type="text" class="form-control" id="cc-name" placeholder="" required />
-                        <small class="text-muted">Full name as displayed on card</small>
-                        <div class="invalid-feedback">
-                            Name on card is required
-                        </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                        <label for="cc-number">Credit card number</label>
-                        <input type="text" class="form-control" id="cc-number" placeholder="" required />
-                        <div class="invalid-feedback">
-                            Credit card number is required
-                        </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                        <label for="cc-expiration">Expiration</label>
-                        <input type="text" class="form-control" id="cc-expiration" placeholder="" required />
-                        <div class="invalid-feedback">
-                            Expiration date required
-                        </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                        <label for="cc-expiration">CVV</label>
-                        <input type="text" class="form-control" id="cc-cvv" placeholder="" required />
-                        <div class="invalid-feedback">
-                            Security code required
-                        </div>
-                        </div>
-                    </div>
-                    <hr class="mb-4" />
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+                    { !orderId ? (<div className="col-md-7 col-lg-8">
+                        <h4 className="mb-3">Billing address</h4>
+                        <Formik
+                            initialValues={{ email: '', emailRepeated: '', phone: '', firstName: '', lastName: '' }}
+                            validate={values => {
+                                const errors = {};
+                                if (!values.email) {
+                                    errors.email = 'Required';
+                                } else if (
+                                    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+                                ) {
+                                    errors.email = 'Invalid email address';
+                                }
+                                if (!values.emailRepeated) {
+                                errors.emailRepeated = 'Required';
+                                } else if (
+                                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.emailRepeated)
+                                ) {
+                                errors.emailRepeated = 'Invalid email address';
+                                }
+                                if(!errors.emailRepeated && !errors.email && values.email !== values.emailRepeated) {
+                                    errors.emailRepeated = 'Email and Email Repetead must be the same';
+                                }
+                                if (!values.firstName) {
+                                    errors.firstName = 'Required'
+                                }
+                                if (!values.lastName) {
+                                    errors.lastName = 'Required'
+                                }
+                                if (!values.phone) {
+                                    errors.phone = 'Required'
+                                } else if (
+                                    !/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im.test(values.phone)
+                                ) {
+                                    errors.phone = 'Invalid phone number'
+                                }
 
 
-                </div>
-                </div>
-                <div class="col-md-4 mb-4">
+                                return errors;
+                            }}
+                            onSubmit={(values, { setSubmitting }) => {
+                                console.log({...values});
+                                //setSubmitting(false)
 
-                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-muted">Your cart</span>
-                    <span class="badge badge-secondary badge-pill">3</span>
-                </h4>
-
-                <ul class="list-group mb-3 z-depth-1">
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                        <h6 class="my-0">Product name</h6>
-                        <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="text-muted">$12</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                        <h6 class="my-0">Second product</h6>
-                        <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="text-muted">$8</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                        <h6 class="my-0">Third item</h6>
-                        <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="text-muted">$5</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between bg-light">
-                    <div class="text-success">
-                        <h6 class="my-0">Promo code</h6>
-                        <small>EXAMPLECODE</small>
-                    </div>
-                    <span class="text-success">-$5</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                    <span>Total (USD)</span>
-                    <strong>$20</strong>
-                    </li>
-                </ul>
-                    <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Promo code" aria-label="Recipient's username" aria-describedby="basic-addon2" />
-                    <div class="input-group-append">
-                        <button class="btn btn-secondary btn-md waves-effect m-0" type="button">Redeem</button>
-                    </div>
-                    </div>
+                                const createOrderId = createOrder(values, setSubmitting).then(res => {
+                                    console.log('res165', res);
+                                }).catch(error => {
+                                    console.log('error167', error)
+                                }).finally(() => {
+                                    setSubmitting(false)
+                                })
+                                console.log('createOrderId', createOrderId)
+                                /* setTimeout(() => {
+                                alert(JSON.stringify(values, null, 2));
+                                setSubmitting(false);
+                                }, 400);
+                                */
+                            }}
+                        >
+                            {({
+                                values,
+                                errors,
+                                touched,
+                                handleChange,
+                                handleBlur,
+                                handleSubmit,
+                                isSubmitting,
+                                /* and other goodies */
+                            }) => (
+                                <Form>
+                                    <div className="row g-3">
+                                        <div className="col-sm-6">
+                                            <label for="email" className="form-label">Email</label>
+                                            <Field type="email" name="email" className={`form-control ${!errors.email ? '' : ' is-invalid' } `} placeholder="Email" />
+                                                <ErrorMessage name="email" className="alert alert-danger" component="p" />
+                                        </div>
+                                        <div className="col-sm-6">
+                                            <label for="email" className="form-label">Repeat Email</label>
+                                            <Field type="email" name="emailRepeated" className={`form-control ${!errors.emailRepeated ? '' : ' is-invalid' } `} placeholder="Repeat Email" />
+                                            <ErrorMessage name="emailRepeated" className="alert alert-danger" component="p" />
+                                        </div>
+                                    </div>
+                                    <div className="row g-12">
+                                        <div className="col">
+                                            <label for="firstName" className="form-label">First Name</label>
+                                            <Field type="text" className={`form-control ${!errors.firstName ? '' : ' is-invalid' } `} name="firstName" placeholder="First Name" />
+                                            <ErrorMessage name="firstName" className="alert alert-danger" component="p" />
+                                        </div>
+                                    </div>
+                                    <div className="row g-12">
+                                        <div className="col">
+                                            <label for="lastName" className="form-label">Last Name</label>
+                                            <Field type="text" className={`form-control ${!errors.lastName ? '' : ' is-invalid' } `} name="lastName" placeholder="Last Name" />
+                                            <ErrorMessage className="alert alert-danger" name="lastName" component="p" />
+                                        </div>
+                                    </div>
+                                    <div className="row g-3">
+                                        <div className="col-sm-12">
+                                            <label for="email" className="form-label">Phone</label>
+                                            <Field type="text" className={`form-control ${!errors.phone ? '' : ' is-invalid' } `} name="phone" placeholder="Phone Number" />
+                                            <ErrorMessage className="alert alert-danger"name="phone" component="p" />
+                                        </div>
+                                    </div>
+                                    <div className="row mt-4">
+                                        <div className="col">
+                                            <button type="submit" className="btn btn-primary float-end" disabled={isSubmitting}>Submit</button>
+                                        </div>
+                                    </div>
+                                </Form>
+                            )}
+                        </Formik>
+                    </div>) : (<div>OrderId: {orderId}</div> )
+                    }
                 </div>
             </div>
+        </section>
 
-            </div>
-        </main>
     )
 }
 

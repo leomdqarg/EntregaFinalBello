@@ -15,7 +15,7 @@ const ItemDetail = ({id, name, img, category, description, price, stock}) => {
         setQuantityToAdd(quantity)
 
         const productToAdd = {
-            id, name, price, quantity
+            id, name, price, quantity, img
         }
 
         addItem(productToAdd)
@@ -34,7 +34,10 @@ const ItemDetail = ({id, name, img, category, description, price, stock}) => {
                     quantityToAdd === 0 ? (
                         <ItemCount initial={productAddedQuantity} stock={stock} onAdd={handleOnAdd} />
                    ) : (
-                    <Link to='/cart' className='btn btn-primary col-12'>Finalizar compra</Link>
+                    <>
+                    <Link to={`/categoria/${category}`} className='btn btn-primary col-12 mb-2'>Seguir Comprando</Link>
+                    <Link to='/cart' className='btn btn-success col-12'>Finalizar compra</Link>
+                    </>
                     )
                 }
 
