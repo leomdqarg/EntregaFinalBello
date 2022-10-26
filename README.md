@@ -17,6 +17,9 @@ corroborar que sea correcto), debe activarse el botón de ‘realizar compra’.
 tenga todos los productos, la fecha y dar feedback del número de orden.
 
 ## Prerequisitos
+You’ll need to have Node >= 14 on your local development machine (but it’s not required on the server). You can use nvm (macOS/Linux) or nvm-windows to switch Node versions between different projects.
+
+Necesitas tener [Node](https://nodejs.org/en/) version >= 14 en el entorno de desarrollo (pero no en el servidor de producci{on}). Puedes usar [nvm](https://github.com/nvm-sh/nvm#intro) (macOS/Linux) o nvm-windows para cambiar de version de Node entre diferentes proyectos.
 
 ## Librerias extras incluidas
 
