@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from "react";
 import { useContext } from "react"
 import { CartContext } from "../../context/CartContext"
-import { getDocs, addDoc, collection, doc, updateDoc, where, query, documentId, writeBatch } from 'firebase/firestore'
+import { getDocs, addDoc, collection, where, query, documentId, writeBatch } from 'firebase/firestore'
 import { db } from '../../services/firebase'
 import { Store } from 'react-notifications-component';
 import { FormatPrice } from '../../Helpers/FormatPrice';
