@@ -5,17 +5,16 @@ import { CartContext } from "../../context/CartContext"
 import { getDocs, addDoc, collection, doc, updateDoc, where, query, documentId, writeBatch } from 'firebase/firestore'
 import { db } from '../../services/firebase'
 import { Store } from 'react-notifications-component';
-
-
+import { FormatPrice } from '../../Helpers/FormatPrice';
+import ItemListContainer from '../ItemListContainer/ItemListContainer'
 
 const Checkout = () => {
     const { cart, getTotalQuantity, getCartTotal, emptyCart } = useContext(CartContext)
     const totalQuantity = getTotalQuantity()
     const cartTotal = getCartTotal()
     const [orderId, setOrderId] = useState('')
-    console.log(cart)
 
-    const createOrder = async (values, setSubmitting) => {
+    const createOrder = async (values) => {
         try {
             const objOrder = {
                 buyer: {
@@ -37,8 +36,8 @@ const Checkout = () => {
             const { docs } = productsAddedFromFirestore
 
             const batch = writeBatch(db)
-            //const outOfStock = [{id: '2DRgyYrQbhKJSOeLfaOz'}]
-            const outOfStock = []
+            const outOfStock = [{id: '2DRgyYrQbhKJSOeLfaOz'}]
+            //const outOfStock = []
 
             docs.forEach(doc => {
                 const dataDoc = doc.data()
@@ -62,52 +61,42 @@ const Checkout = () => {
 
                 setOrderId(orderAdded.id)
                 emptyCart()
+                return new Promise(function(resolve, reject) {
+                      resolve(true);
+                  });
             } else {
                 console.log('Hay productos fuera de stock')
-                throw new Error("Uh-oh!");
+                return new Promise(function(resolve, reject) {
+                      reject(Error("Hay productos fuera de stock"));
+                  });
             }
         } catch (error) {
-
-            console.log('error', error)
-            Store.addNotification({
-                title: "Error de Red",
-                message: 'Error de red. Intente mas tarde',
-                type: "danger",
-                insert: "top",
-                container: "top-right",
-                animationIn: ["animate__animated", "animate__fadeIn"],
-                animationOut: ["animate__animated", "animate__fadeOut"],
-                dismiss: {
-                  duration: 5000,
-                  onScreen: true
-                }
-            })
-            throw new Error("Uh-oh!");
-        } finally {
-            setSubmitting(false)
+            return new Promise(function(resolve, reject) {
+                  reject(Error("Error"));
+              });
         }
     }
-
-
-
+    if (totalQuantity === 0) {
+        return (<ItemListContainer showAlert={1} greetings="No hay productos en el carrito." />)
+    }
     return (
         <section className="py-5">
             <div className="container px-4 px-lg-5 mt-5">
                 <div className="row g-5">
                     <div className="col-md-5 col-lg-4 order-md-last">
                         <h4 className="d-flex justify-content-between align-items-center mb-3">
-                            <span className="text-primary">Mi carrito</span>
-                            <span className="badge bg-primary rounded-pill">{totalQuantity}</span>
+                            <span className="text-secondary">Mi carrito</span>
+                            <span className="badge bg-secondary rounded-pill">{totalQuantity}</span>
                         </h4>
                         <ul className="list-group mb-3">
                             {
                                 cart.map( item => {
-                                    return (<li className="list-group-item d-flex justify-content-between lh-sm">
+                                    return (<li key={item.id} className="list-group-item d-flex justify-content-between lh-sm">
                                         <div>
                                         <h6 className="my-0">{item.name}</h6>
                                         <small className="text-muted">Cantidad: {item.quantity}</small>
                                         </div>
-                                        <span className="text-muted">{item.price*item.quantity}</span>
+                                        <span className="text-muted">{FormatPrice(item.price*item.quantity)}</span>
                                     </li>)
 
                                 })
@@ -120,7 +109,7 @@ const Checkout = () => {
 
                     </div>
                     { !orderId ? (<div className="col-md-7 col-lg-8">
-                        <h4 className="mb-3">Billing address</h4>
+                        <h4 className="mb-3">Mis Datos</h4>
                         <Formik
                             initialValues={{ email: '', emailRepeated: '', phone: '', firstName: '', lastName: '' }}
                             validate={values => {
@@ -163,7 +152,7 @@ const Checkout = () => {
                                 console.log({...values});
                                 //setSubmitting(false)
 
-                                const createOrderId = createOrder(values, setSubmitting).then(res => {
+                                const createOrderId = createOrder(values).then(res => {
                                     console.log('res165', res);
                                 }).catch(error => {
                                     console.log('error167', error)
@@ -171,11 +160,6 @@ const Checkout = () => {
                                     setSubmitting(false)
                                 })
                                 console.log('createOrderId', createOrderId)
-                                /* setTimeout(() => {
-                                alert(JSON.stringify(values, null, 2));
-                                setSubmitting(false);
-                                }, 400);
-                                */
                             }}
                         >
                             {({
@@ -191,40 +175,40 @@ const Checkout = () => {
                                 <Form>
                                     <div className="row g-3">
                                         <div className="col-sm-6">
-                                            <label for="email" className="form-label">Email</label>
+                                            <label htmlFor="email" className="form-label">Email</label>
                                             <Field type="email" name="email" className={`form-control ${!errors.email ? '' : ' is-invalid' } `} placeholder="Email" />
                                                 <ErrorMessage name="email" className="alert alert-danger" component="p" />
                                         </div>
                                         <div className="col-sm-6">
-                                            <label for="email" className="form-label">Repeat Email</label>
+                                            <label htmlFor="email" className="form-label">Repeat Email</label>
                                             <Field type="email" name="emailRepeated" className={`form-control ${!errors.emailRepeated ? '' : ' is-invalid' } `} placeholder="Repeat Email" />
                                             <ErrorMessage name="emailRepeated" className="alert alert-danger" component="p" />
                                         </div>
                                     </div>
                                     <div className="row g-12">
                                         <div className="col">
-                                            <label for="firstName" className="form-label">First Name</label>
+                                            <label htmlFor="firstName" className="form-label">First Name</label>
                                             <Field type="text" className={`form-control ${!errors.firstName ? '' : ' is-invalid' } `} name="firstName" placeholder="First Name" />
                                             <ErrorMessage name="firstName" className="alert alert-danger" component="p" />
                                         </div>
                                     </div>
                                     <div className="row g-12">
                                         <div className="col">
-                                            <label for="lastName" className="form-label">Last Name</label>
+                                            <label htmlFor="lastName" className="form-label">Last Name</label>
                                             <Field type="text" className={`form-control ${!errors.lastName ? '' : ' is-invalid' } `} name="lastName" placeholder="Last Name" />
                                             <ErrorMessage className="alert alert-danger" name="lastName" component="p" />
                                         </div>
                                     </div>
                                     <div className="row g-3">
                                         <div className="col-sm-12">
-                                            <label for="email" className="form-label">Phone</label>
+                                            <label htmlFor="email" className="form-label">Phone</label>
                                             <Field type="text" className={`form-control ${!errors.phone ? '' : ' is-invalid' } `} name="phone" placeholder="Phone Number" />
                                             <ErrorMessage className="alert alert-danger"name="phone" component="p" />
                                         </div>
                                     </div>
                                     <div className="row mt-4">
                                         <div className="col">
-                                            <button type="submit" className="btn btn-primary float-end" disabled={isSubmitting}>Submit</button>
+                                            <button type="submit" className="btn btn-primary float-end" disabled={isSubmitting}>Confirmar Orden</button>
                                         </div>
                                     </div>
                                 </Form>
@@ -235,7 +219,6 @@ const Checkout = () => {
                 </div>
             </div>
         </section>
-
     )
 }
 

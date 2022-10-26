@@ -4,17 +4,13 @@ const ItemCount = ({initial = 1, stock = 0, onAdd}) => {
     const [counter, setCounter] = useState(initial)
 
     const incrementCounter = () => {
-        console.log('incrementCounter', counter)
-        if (counter < stock)
-        {
+        if (counter < stock) {
             setCounter(counter+1)
         }
     }
 
     const decrementCounter = () => {
-        console.log('decrementCounter', counter)
-        if (counter > 0 )
-        {
+        if (counter > 0 ) {
             setCounter(counter-1)
         }
     }
@@ -41,5 +37,3 @@ const ItemCount = ({initial = 1, stock = 0, onAdd}) => {
   }
 
 export default ItemCount;
-
-

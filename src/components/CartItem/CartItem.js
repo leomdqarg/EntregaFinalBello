@@ -1,31 +1,29 @@
 import { useContext } from "react"
 import { CartContext } from "../../context/CartContext"
+import { FormatPrice } from "../../Helpers/FormatPrice"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const CartItem = ({id, name, img, price, quantity}) => {
     const { removeItem } = useContext(CartContext)
-
     const handleRemoveItem = () => {
-        //const conf = confirm(`¿Seguro de eliminar el producto: ${name}?`)
-        console.log('entro a remove item');
         return removeItem(id)
-
     }
-
     return (
-        <div className="row">
+        <>
             <div className="col-2">
                 <img src={img} alt={name} className="img-thumbnail" />
             </div>
             <div className="col-4">
                 <h6>{name}</h6>
-                <h5>{price}</h5>
+                <h5>{FormatPrice(price)}</h5>
             </div>
             <div className="col-2">{quantity}</div>
-            <div className="col-2"><h5>${price * quantity}</h5></div>
+            <div className="col-2"><h5>{FormatPrice(price * quantity)}</h5></div>
             <div className="col-2">
-                <button className="btn btn-danger" onClick={() => handleRemoveItem()}>remove</button>
+                <button className="btn btn-danger" onClick={() => handleRemoveItem()}><FontAwesomeIcon icon={faTrash} /></button>
             </div>
-        </div>
+        </>
     )
 }
 
