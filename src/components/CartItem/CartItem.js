@@ -3,11 +3,26 @@ import { CartContext } from "../../context/CartContext"
 import { FormatPrice } from "../../Helpers/FormatPrice"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Store } from 'react-notifications-component';
 
 const CartItem = ({id, name, img, price, quantity}) => {
     const { removeItem } = useContext(CartContext)
     const handleRemoveItem = () => {
-        return removeItem(id)
+        const productRemoved =  removeItem(id);
+        Store.addNotification({
+            title: "Producto eliminado!",
+            message: `Quitado ${productRemoved.name}`,
+            type: "warning",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+                duration: 5000,
+                onScreen: true
+            }
+        })
+        return productRemoved;
     }
     return (
         <>

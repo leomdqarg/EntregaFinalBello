@@ -2,7 +2,7 @@ import { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { CartContext } from '../../context/CartContext'
 import { FormatPrice } from '../../Helpers/FormatPrice'
-
+import { Store } from 'react-notifications-component';
 import ItemCount from "../ItemCount/ItemCount.js"
 
 const ItemDetail = ({id, name, img, category, description, price, stock}) => {
@@ -20,6 +20,19 @@ const ItemDetail = ({id, name, img, category, description, price, stock}) => {
         }
 
         addItem(productToAdd)
+        Store.addNotification({
+            title: "Producto Agregado!",
+            message: `Agregado ${productToAdd.name}`,
+            type: "success",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+            duration: 5000,
+            onScreen: true
+            }
+        })
     }
 
     return (
