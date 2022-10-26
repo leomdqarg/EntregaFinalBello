@@ -12,7 +12,6 @@ const NavBar = () => {
     useEffect(() => {
         const collectionRef = query(collection(db, 'categories'), orderBy('name'))
         getDocs(collectionRef).then( response => {
-            console.log(response)
                 const categoriesAdapted = response.docs.map(doc => {
                 const data = doc.data()
                 return {id: doc.id, ...data}
@@ -39,7 +38,6 @@ const NavBar = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container px-4 px-lg-5">
-
                 <Link className="navbar-brand" to='/'>
                     <img alt="logo" src={logo} />
                     La Tiendita
