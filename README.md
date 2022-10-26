@@ -47,49 +47,47 @@ Empaqueta correctamente React en modo de producción y optimiza la compilación 
 Ver mas en [deployment](https://facebook.github.io/create-react-app/docs/deployment) .
 
 ## Estructura de Base de Datos
-Hay una coleccion de categorias con el siguiente formato:
+Hay una coleccion de categorias con el siguiente formato: \
     categories = [\
         { name: 'Zapatos de Mujer', slug: 'woman-shoes'},\
         { name: 'Relojes de Mujer', slug: 'woman-watches'},\
         ...\
     ]
 
-Y otra coleccion para productos
-    products = [{
-        name: 'NIGHT SUIT',
-        description: 'NIGHT SUIT RED MICKY MOUSE..  For Girls. Fantastic Suits.',
-        price: 55,
-        discountPercentage: 15.05,
-        rating: 4.65,
-        stock: 21,
-        brand: 'RED MICKY MOUSE..',
-        category: 'womens-dresses',
-        img: 'https://dummyjson.com/image/i/products/41/thumbnail.webp',
-        images: [
-            'https://dummyjson.com/image/i/products/41/1.jpg',
-            'https://dummyjson.com/image/i/products/41/2.webp',
-            'https://dummyjson.com/image/i/products/41/3.jpg',
-            'https://dummyjson.com/image/i/products/41/4.jpg',
-            'https://dummyjson.com/image/i/products/41/thumbnail.webp'
-        ]
-        },
-        {
-        name: 'Stiched Kurta plus trouser',
-        description: 'FABRIC: LILEIN CHEST: 21 LENGHT: 37 TROUSER: (38) :ARABIC LILEIN',
-        price: 80,
-        discountPercentage: 15.37,
-        rating: 4.05,
-        stock: 148,
-        brand: 'Digital Printed',
-        category: 'womens-dresses',
-        img: 'https://dummyjson.com/image/i/products/42/thumbnail.jpg',
-        images: [
-            'https://dummyjson.com/image/i/products/42/1.png',
-            'https://dummyjson.com/image/i/products/42/2.png',
-            'https://dummyjson.com/image/i/products/42/3.png',
-            'https://dummyjson.com/image/i/products/42/4.jpg',
-            'https://dummyjson.com/image/i/products/42/thumbnail.jpg'
-        ]
-        },
-        ...
-    ]
+Y otra coleccion para productos \
+    products = [{ \
+        name: 'NIGHT SUIT', \
+        description: 'NIGHT SUIT RED MICKY MOUSE..  For Girls. Fantastic Suits.', \
+        price: 55, \
+        discountPercentage: 15.05, \
+        rating: 4.65, \
+        stock: 21, \
+        brand: 'RED MICKY MOUSE..', \
+        category: 'womens-dresses', \
+        img: 'https://dummyjson.com/image/i/products/41/thumbnail.webp', \
+        images: [ \
+            'https://dummyjson.com/image/i/products/41/1.jpg',\
+            'https://dummyjson.com/image/i/products/41/2.webp',\
+            'https://dummyjson.com/image/i/products/41/3.jpg',\
+            'https://dummyjson.com/image/i/products/41/4.jpg',\
+            'https://dummyjson.com/image/i/products/41/thumbnail.webp'\
+        ]},\
+        {\
+        name: 'Stiched Kurta plus trouser',\
+        description: 'FABRIC: LILEIN CHEST: 21 LENGHT: 37 TROUSER: (38) :ARABIC LILEIN',\
+        price: 80,\
+        discountPercentage: 15.37,\
+        rating: 4.05,\
+        stock: 148,\
+        brand: 'Digital Printed',\
+        category: 'womens-dresses',\
+        img: 'https://dummyjson.com/image/i/products/42/thumbnail.jpg',\
+        images: [\
+            'https://dummyjson.com/image/i/products/42/1.png',\
+            'https://dummyjson.com/image/i/products/42/2.png',\
+            'https://dummyjson.com/image/i/products/42/3.png',\
+            'https://dummyjson.com/image/i/products/42/4.jpg',\
+            'https://dummyjson.com/image/i/products/42/thumbnail.jpg'\
+        ]},\
+        ...\
+    ]\
