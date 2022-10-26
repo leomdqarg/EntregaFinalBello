@@ -32,7 +32,7 @@ const Cart = () => {
                     <div className="col-2"><h5 className="text-primary">{FormatPrice(cartTotal)}</h5></div>
                 </div>
                 <div className="row mt-3">
-                    <div class="col-12">
+                    <div className="col-12">
                     <Link to="/checkout" className="btn btn-success float-end">Finalizar Compra</Link>
 
                     </div>
