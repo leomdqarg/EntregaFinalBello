@@ -9,11 +9,11 @@ Este proyecto fue creado con [Create React App](https://github.com/facebook/crea
 - Un usuario debe poder ingresar, navegar por los productos e ir a sus detalles.
 - Desde el detalle se debe poder ver la descripción, foto y precio e ingresarlo al
 carrito.
--Una vez que el carrito tenga al menos un producto, se deberá visualizar un
+- Una vez que el carrito tenga al menos un producto, se deberá visualizar un
 listado compacto de la orden con el precio total.
--Al ingresar su nombre, apellido, teléfono e e-mail (ingresándolo dos veces para
+- Al ingresar su nombre, apellido, teléfono e e-mail (ingresándolo dos veces para
 corroborar que sea correcto), debe activarse el botón de ‘realizar compra’.
--Al clickear ‘realizar compra’ debe guardarse en la base de datos una orden que
+- Al clickear ‘realizar compra’ debe guardarse en la base de datos una orden que
 tenga todos los productos, la fecha y dar feedback del número de orden.
 
 ## Prerequisitos
@@ -30,7 +30,7 @@ tenga todos los productos, la fecha y dar feedback del número de orden.
 - Para instalar dependencias: npm install
 - Configuracion de Firebase/Firestore se provee un archivo de ejemplo .env.example reemplazar con los datos propios que se obtienen en [firebase/firestore](https://console.firebase.google.com/)
 
-## En el directorio del proyecto puedes ejecutar:\
+## En el directorio del proyecto puedes ejecutar:
 
 ## npm start
 
@@ -48,10 +48,10 @@ Ver mas en [deployment](https://facebook.github.io/create-react-app/docs/deploym
 
 ## Estructura de Base de Datos
 Hay una coleccion de categorias con el siguiente formato:
-    categories = [
-        { name: 'Zapatos de Mujer', slug: 'woman-shoes'},
-        { name: 'Relojes de Mujer', slug: 'woman-watches'},
-        ...
+    categories = [\
+        { name: 'Zapatos de Mujer', slug: 'woman-shoes'},\
+        { name: 'Relojes de Mujer', slug: 'woman-watches'},\
+        ...\
     ]
 
 Y otra coleccion para productos
