@@ -1,70 +1,95 @@
-# Getting Started with Create React App
+# Acerca del Proyecto
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Proyecto final para el curso de [ReactJs](https://reactjs.org/). de [CoderHouse](https://www.coderhouse.es/online/reactjs)
 
-## Available Scripts
+Este proyecto fue creado con [Create React App](https://github.com/facebook/create-react-app).
 
-In the project directory, you can run:
+## Objetivos a cumplir
 
-### `npm start`
+- Un usuario debe poder ingresar, navegar por los productos e ir a sus detalles.
+- Desde el detalle se debe poder ver la descripción, foto y precio e ingresarlo al
+carrito.
+-Una vez que el carrito tenga al menos un producto, se deberá visualizar un
+listado compacto de la orden con el precio total.
+-Al ingresar su nombre, apellido, teléfono e e-mail (ingresándolo dos veces para
+corroborar que sea correcto), debe activarse el botón de ‘realizar compra’.
+-Al clickear ‘realizar compra’ debe guardarse en la base de datos una orden que
+tenga todos los productos, la fecha y dar feedback del número de orden.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Prerequisitos
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Librerias extras incluidas
 
-### `npm test`
+- Fontawesome: Libreria de iconos [Fontawesome](https://fontawesome.com/v5/docs/web/use-with/react)
+- Formik: para el manejo del formulario [Formik](https://formik.org/)
+- Firebase/Firestore: como motor de base de datos [Firestore](https://firebase.google.com/docs/firestore)
+- React Notifications: Para mostrar notificaciones y/o errores al usuario [REACT-NOTIFICATIONS](https://teodosii.github.io/react-notifications-component/)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Instalaccion
 
-### `npm run build`
+- Para instalar dependencias: npm install
+- Configuracion de Firebase/Firestore se provee un archivo de ejemplo .env.example reemplazar con los datos propios que se obtienen en [firebase/firestore](https://console.firebase.google.com/)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## En el directorio del proyecto puedes ejecutar:\
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## npm start
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Ejecuta la aplicacion en modo desarrollo.\
+Abrir [http://localhost:3000](http://localhost:3000) para ver en el navegador. \
+La pagina se actualizara con cada cambio.\
+Ademas se muestrar errores y output por la terminal.
 
-### `npm run eject`
+## npm run build
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Build de la app para el entorno de produccion. Los archivos estan la carpeta `build`.\
+Empaqueta correctamente React en modo de producción y optimiza la compilación para obtener el mejor rendimiento.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Ver mas en [deployment](https://facebook.github.io/create-react-app/docs/deployment) .
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Estructura de Base de Datos
+Hay una coleccion de categorias con el siguiente formato:
+    categories = [
+        { name: 'Zapatos de Mujer', slug: 'woman-shoes'},
+        { name: 'Relojes de Mujer', slug: 'woman-watches'},
+        ...
+    ]
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Y otra coleccion para productos
+    products = [{
+        name: 'NIGHT SUIT',
+        description: 'NIGHT SUIT RED MICKY MOUSE..  For Girls. Fantastic Suits.',
+        price: 55,
+        discountPercentage: 15.05,
+        rating: 4.65,
+        stock: 21,
+        brand: 'RED MICKY MOUSE..',
+        category: 'womens-dresses',
+        img: 'https://dummyjson.com/image/i/products/41/thumbnail.webp',
+        images: [
+            'https://dummyjson.com/image/i/products/41/1.jpg',
+            'https://dummyjson.com/image/i/products/41/2.webp',
+            'https://dummyjson.com/image/i/products/41/3.jpg',
+            'https://dummyjson.com/image/i/products/41/4.jpg',
+            'https://dummyjson.com/image/i/products/41/thumbnail.webp'
+        ]
+        },
+        {
+        name: 'Stiched Kurta plus trouser',
+        description: 'FABRIC: LILEIN CHEST: 21 LENGHT: 37 TROUSER: (38) :ARABIC LILEIN',
+        price: 80,
+        discountPercentage: 15.37,
+        rating: 4.05,
+        stock: 148,
+        brand: 'Digital Printed',
+        category: 'womens-dresses',
+        img: 'https://dummyjson.com/image/i/products/42/thumbnail.jpg',
+        images: [
+            'https://dummyjson.com/image/i/products/42/1.png',
+            'https://dummyjson.com/image/i/products/42/2.png',
+            'https://dummyjson.com/image/i/products/42/3.png',
+            'https://dummyjson.com/image/i/products/42/4.jpg',
+            'https://dummyjson.com/image/i/products/42/thumbnail.jpg'
+        ]
+        },
+        ...
+    ]
