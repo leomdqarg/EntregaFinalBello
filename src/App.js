@@ -4,10 +4,8 @@ import 'react-notifications-component/dist/theme.css'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { CartContextProvider } from './context/CartContext'
+import { OrdersContextProvider } from './context/OrdersContext'
 
-//import { getDocs, addDoc, collection, doc, updateDoc, where, query, documentId, writeBatch } from 'firebase/firestore'
-
-//import { db } from './services/firebase'
 import { ReactNotifications } from 'react-notifications-component'
 
 import NavBar from './components/Navbar/Navbar'
@@ -23,6 +21,7 @@ function App() {
     <div id="App">
       <ReactNotifications />
         <CartContextProvider>
+        <OrdersContextProvider>
         <BrowserRouter>
           <NavBar />
           <Routes>
@@ -34,6 +33,7 @@ function App() {
             <Route path="*" element={ <ItemListContainer showAlert={1} greetings={`Eror 404. Pagina no encontrada`} />} />
           </Routes>
         </BrowserRouter>
+        </OrdersContextProvider>
         </CartContextProvider>
       <Footer />
     </div>

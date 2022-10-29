@@ -5,15 +5,16 @@ export const useAsync = (asyncFunc, dependencies = []) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState()
 
-    if (Array.isArray(dependencies)) {
+    if (!Array.isArray(dependencies)) {
         dependencies = []
     }
     useEffect(() => {
+        console.log('entro a useAsync')
         setLoading(true)
         asyncFunc().then(response => {
             setData(response)
         }).catch(error => {
-            console.error(error)
+            console.log(error)
             setError(error)
         }).finally( () => {
             setLoading(false)

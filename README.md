@@ -23,8 +23,8 @@ Necesitas tener [Node](https://nodejs.org/en/) version >= 14 en el entorno de de
 
 ## Librerias extras incluidas
 
-- Fontawesome: Libreria de iconos [Fontawesome](https://fontawesome.com/v5/docs/web/use-with/react)
-- Formik: para el manejo del formulario [Formik](https://formik.org/)
+- Fontawesome: Libreria para iconos [Fontawesome](https://fontawesome.com/v5/docs/web/use-with/react)
+- Formik: para el manejo de formularios [Formik](https://formik.org/)
 - Firebase/Firestore: como motor de base de datos [Firestore](https://firebase.google.com/docs/firestore)
 - React Notifications: Para mostrar notificaciones y/o errores al usuario [REACT-NOTIFICATIONS](https://teodosii.github.io/react-notifications-component/)
 
