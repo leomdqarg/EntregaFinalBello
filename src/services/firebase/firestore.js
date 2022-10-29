@@ -1,7 +1,7 @@
 import { addDoc, documentId, writeBatch, doc, getDoc, getDocs, collection, query, where, orderBy } from 'firebase/firestore'
 import { db } from '.'
 
-export const createOrder = async (values, cart, cartTotal) => {
+export const createOrder = async (values, cart, cartTotal, status) => {
     try {
         const objOrder = {
             buyer: {
@@ -11,7 +11,10 @@ export const createOrder = async (values, cart, cartTotal) => {
                 phone: values.phone,
             },
             items: cart,
-            total: cartTotal
+            total: cartTotal,
+            status: status,
+            createdAt: new Date(),
+            updatedAt: new Date(),
         }
         const ids = cart.map(prod => prod.id)
         const productsRef = collection(db, 'products')

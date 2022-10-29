@@ -44,7 +44,7 @@ const CheckoutForm = ({setShowConfirmation}) => {
                     return errors;
                 }}
                 onSubmit={(values, { setSubmitting }) => {
-                    createOrder(values, cart, cartTotal).then(order => {
+                    createOrder(values, cart, cartTotal, 'generada').then(order => {
                         addOrder(order)
                         emptyCart()
                         setShowConfirmation(true)
