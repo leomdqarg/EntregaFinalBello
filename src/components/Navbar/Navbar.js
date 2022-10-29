@@ -1,18 +1,14 @@
 import './Navbar.css'
 import logo from './logo.svg'
 import CartWidget from '../CartWidget/CartWidget'
+import MyOrdersWidget from '../MyOrdersWidget/MyOrdersWidget'
 import { Link, NavLink } from 'react-router-dom'
 import { getCategories } from '../../services/firebase/firestore'
-import { useOrders } from '../../context/OrdersContext'
 import { useAsync } from '../../hooks/useAsync'
 
 const NavBar = () => {
 
-    const { getLastOrder } = useOrders()
-    const lastOrder = getLastOrder()
-    const {data: categories, error, loading } = useAsync(() => getCategories(), [])
-
-    console.log('errror', error)
+    const {data: categories } = useAsync(() => getCategories(), [])
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -36,9 +32,8 @@ const NavBar = () => {
                             </ul>
                         </li>
                     </ul>
+                    <MyOrdersWidget />
                     <CartWidget />
-
-                    { lastOrder?.id ? `Last Order ID: ${lastOrder.id}` : '' }
                 </div>
             </div>
         </nav>

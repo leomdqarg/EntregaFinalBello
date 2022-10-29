@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FormatPrice } from '../../Helpers/FormatPrice'
+import { formatPrice } from '../../helpers/formatPrice'
 import { Store } from 'react-notifications-component';
 import { useCart } from '../../context/CartContext'
 import ItemCount from '../ItemCount/ItemCount.js'
@@ -45,12 +45,12 @@ const ItemDetail = ({id, name, img, category, description, price, stock}) => {
                         <div className="small mb-1">SKU: BST-{ id }</div>
                         <h1 className="display-5 fw-bolder">{ name }</h1>
                         <div className="fs-5 mb-5">
-                            <span>{FormatPrice(price) }</span>
+                            <span>{formatPrice(price) }</span>
                         </div>
                         <p className="lead">{ description }</p>
                         {
                             quantityToAdd === 0 ? (
-                                <ItemCount initial={productAddedQuantity} stock={stock} onAdd={handleOnAdd} />
+                                <ItemCount initial={stock > 0 ? productAddedQuantity : 0} stock={stock} onAdd={handleOnAdd} />
                             ) : (
                             <>
                                 <Link to={`/categoria/${category}`} className='btn btn-primary col-12 mb-2'>Seguir Comprando</Link>

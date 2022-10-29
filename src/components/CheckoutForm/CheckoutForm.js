@@ -6,8 +6,9 @@ import { Store } from 'react-notifications-component'
 import { createOrder } from '../../services/firebase/firestore'
 
 const CheckoutForm = ({setShowConfirmation}) => {
-    const { cart, getCartTotal, emptyCart } = useCart()
+    const { cart, getCartTotal, getTotalQuantity, emptyCart } = useCart()
     const cartTotal = getCartTotal()
+    const totalQuantity = getTotalQuantity()
     const { addOrder } = useOrders()
 
     return (
@@ -44,8 +45,8 @@ const CheckoutForm = ({setShowConfirmation}) => {
                     return errors;
                 }}
                 onSubmit={(values, { setSubmitting }) => {
-                    createOrder(values, cart, cartTotal, 'generada').then(order => {
-                        addOrder(order)
+                    createOrder(values, cart, cartTotal, totalQuantity, 'generada').then(order => {
+                        addOrder(order.id)
                         emptyCart()
                         setShowConfirmation(true)
                     }).catch(error => {
@@ -69,14 +70,8 @@ const CheckoutForm = ({setShowConfirmation}) => {
                 }}
             >
                 {({
-                    values,
                     errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
                     isSubmitting,
-                    /* and other goodies */
                 }) => (
                     <Form>
                         <div className="row g-3">

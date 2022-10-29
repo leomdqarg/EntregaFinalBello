@@ -1,7 +1,7 @@
 import { addDoc, documentId, writeBatch, doc, getDoc, getDocs, collection, query, where, orderBy } from 'firebase/firestore'
 import { db } from '.'
 
-export const createOrder = async (values, cart, cartTotal, status) => {
+export const createOrder = async (values, cart, cartTotal, totalQuantity, status) => {
     try {
         const objOrder = {
             buyer: {
@@ -12,9 +12,8 @@ export const createOrder = async (values, cart, cartTotal, status) => {
             },
             items: cart,
             total: cartTotal,
+            totalQuantity: totalQuantity,
             status: status,
-            createdAt: new Date(),
-            updatedAt: new Date(),
         }
         const ids = cart.map(prod => prod.id)
         const productsRef = collection(db, 'products')
@@ -85,6 +84,24 @@ export const getProduct = ((productId) => {
             const data = doc.data()
             const productAdapted = data !== undefined ? {id: doc.id, ...data} : false
             resolve(productAdapted);
+        }).catch( error => {
+            console.log('error', error)
+            reject(error)
+        })
+    })
+})
+
+export const getOrder = ((orderId) => {
+    console.log('firebase94', orderId)
+    return new Promise((resolve, reject) => {
+        console.log('orderId', orderId)
+        const orderRef = doc(db, 'orders', orderId)
+        getDoc(orderRef).then(doc => {
+
+            const data = doc.data()
+            console.log('data', data)
+            const orderAdapted = data !== undefined ? {id: doc.id, ...data} : false
+            resolve(orderAdapted);
         }).catch( error => {
             console.log('error', error)
             reject(error)

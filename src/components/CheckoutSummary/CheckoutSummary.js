@@ -1,4 +1,4 @@
-import { FormatPrice } from '../../Helpers/FormatPrice'
+import { formatPrice } from '../../helpers/formatPrice'
 import { useCart } from '../../context/CartContext'
 
 const CheckoutSummary = () => {
@@ -20,14 +20,14 @@ const CheckoutSummary = () => {
                                 <h6 className="my-0">{item.name}</h6>
                                 <small className="text-muted">Cantidad: {item.quantity}</small>
                                 </div>
-                                <span className="text-muted">{FormatPrice(item.price*item.quantity)}</span>
+                                <span className="text-muted">{formatPrice(item.price*item.quantity)}</span>
                             </li>)
 
                         })
                     }
                     <li className="list-group-item d-flex justify-content-between">
                         <span>Total</span>
-                        <strong>{FormatPrice(cartTotal)}</strong>
+                        <strong>{formatPrice(cartTotal)}</strong>
                     </li>
                 </ul>
 

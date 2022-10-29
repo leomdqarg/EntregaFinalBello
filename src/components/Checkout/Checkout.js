@@ -9,11 +9,10 @@ import { useState } from 'react';
 const Checkout = () => {
 
     const { getTotalQuantity } = useCart()
-    const { getLastOrder } = useOrders()
+    const { getLastOrderId } = useOrders()
     const totalQuantity = getTotalQuantity()
-    const lastOrder = getLastOrder()
+    const lastOrderId = getLastOrderId()
     const [showConfirmation, setShowConfirmation] = useState(false)
-
 
     if (totalQuantity === 0 && !showConfirmation) {
         return (<ItemListContainer showAlert={1} greetings="No hay productos en el carrito." />)
@@ -29,7 +28,7 @@ const Checkout = () => {
                             <CheckoutForm {...{setShowConfirmation}} />
                         </>
                         ) : (
-                            <div className="alert alert-success" role="alert">Compra Finalizada. <br/>Su numero de pedido es:<strong>{lastOrder?.id}</strong></div>
+                            <div className="alert alert-success" role="alert">Compra Finalizada. <br/>Su numero de pedido es:<strong>{lastOrderId}</strong></div>
                         )
                     }
                 </div>

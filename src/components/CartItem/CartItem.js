@@ -1,15 +1,16 @@
 
-import { FormatPrice } from '../../Helpers/FormatPrice'
+import { formatPrice } from '../../helpers/formatPrice'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Store } from 'react-notifications-component'
 import { useCart } from '../../context/CartContext'
 
-const CartItem = ({id, name, img, price, quantity}) => {
+const CartItem = ({id, name, img, price, quantity, readOnly = false}) => {
 
     const { removeItem } = useCart()
 
     const handleRemoveItem = () => {
+        console.log('readOnly', readOnly)
         const productRemoved =  removeItem(id);
         Store.addNotification({
             title: "Producto eliminado!",
@@ -33,12 +34,12 @@ const CartItem = ({id, name, img, price, quantity}) => {
             </div>
             <div className="col-4">
                 <h6>{name}</h6>
-                <h5>{FormatPrice(price)}</h5>
+                <h5>{formatPrice(price)}</h5>
             </div>
             <div className="col-2">{quantity}</div>
-            <div className="col-2"><h5>{FormatPrice(price * quantity)}</h5></div>
+            <div className="col-2"><h5>{formatPrice(price * quantity)}</h5></div>
             <div className="col-2">
-                <button className="btn btn-danger" onClick={() => handleRemoveItem()}><FontAwesomeIcon icon={faTrash} /></button>
+                { !readOnly ? (<button className="btn btn-danger" onClick={() => handleRemoveItem()}><FontAwesomeIcon icon={faTrash} /></button>) : ('') }
             </div>
         </>
     )

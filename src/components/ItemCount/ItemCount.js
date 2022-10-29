@@ -1,7 +1,8 @@
 import { useState } from 'react'
 const ItemCount = ({initial = 1, stock = 0, onAdd}) => {
-
+    console.log('initial', initial)
     const [counter, setCounter] = useState(initial)
+    console.log('counter', counter)
 
     const incrementCounter = () => {
         if (counter < stock) {
@@ -30,7 +31,7 @@ const ItemCount = ({initial = 1, stock = 0, onAdd}) => {
             </div>
 
             <div className="col-12">
-                <button className="btn btn-success col-12" onClick={() => onAdd(counter)}>Agregar al carrito</button>
+                <button className={counter === 0 ? 'disabled btn btn-success col-12' : 'btn btn-success col-12' }  onClick={() => onAdd(counter)}>Agregar al carrito</button>
             </div>
         </div>
     );

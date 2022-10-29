@@ -6,11 +6,13 @@ export const OrdersContextProvider = ({ children }) => {
 
     const [orders, setOrders] = useState([])
 
+    const getOrders = () => {
+        return orders
+    }
 
     const addOrder = (orderToAdd) => {
-        if (!isInOrders(orderToAdd.id)) {
             setOrders([...orders, orderToAdd])
-        }
+            console.log('orders', orders);
     }
 
     const isInOrders = (id) => {
@@ -24,17 +26,16 @@ export const OrdersContextProvider = ({ children }) => {
         return orderRemoved
     }
 
-    const getLastOrder = () => {
+    const getLastOrderId = () => {
         return [...orders].pop() //avoid mutation
     }
 
     return (
-        <OrdersContext.Provider value={{ orders, addOrder, isInOrders, removeOrder, getLastOrder }}>
+        <OrdersContext.Provider value={{ orders, addOrder, isInOrders, removeOrder, getLastOrderId, getOrders }}>
             {children}
         </OrdersContext.Provider>
     )
 }
-
 
 export const useOrders = () => {
     return useContext(OrdersContext)

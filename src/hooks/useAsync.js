@@ -19,7 +19,7 @@ export const useAsync = (asyncFunc, dependencies = []) => {
         }).finally( () => {
             setLoading(false)
         })
-
+        // eslint-disable-next-line
     }, dependencies)
 
     return {
