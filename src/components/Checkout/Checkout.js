@@ -123,35 +123,36 @@ const Checkout = () => {
                                         <Form>
                                             <div className="row g-3">
                                                 <div className="col-sm-6">
-                                                    <label htmlFor="email" className="form-label">Email</label>
+                                                    <label htmlFor="email" className="form-label">Correo Electronico</label>
                                                     <Field type="email" name="email" className={`form-control ${!errors.email ? '' : ' is-invalid' } `} placeholder="Email" />
-                                                        <ErrorMessage name="email" className="alert alert-danger" component="p" />
+                                                        <ErrorMessage name="email" className="invalid-feedback" component="div" />
                                                 </div>
                                                 <div className="col-sm-6">
-                                                    <label htmlFor="email" className="form-label">Repeat Email</label>
+                                                    <label htmlFor="email" className="form-label">Repita el Correo Electronico</label>
                                                     <Field type="email" name="emailRepeated" className={`form-control ${!errors.emailRepeated ? '' : ' is-invalid' } `} placeholder="Repeat Email" />
-                                                    <ErrorMessage name="emailRepeated" className="alert alert-danger" component="p" />
+                                                    <ErrorMessage name="emailRepeated" className="invalid-feedback" component="div" />
                                                 </div>
                                             </div>
                                             <div className="row g-12">
                                                 <div className="col">
-                                                    <label htmlFor="firstName" className="form-label">First Name</label>
+                                                    <label htmlFor="firstName" className="form-label">Nombre</label>
                                                     <Field type="text" className={`form-control ${!errors.firstName ? '' : ' is-invalid' } `} name="firstName" placeholder="First Name" />
-                                                    <ErrorMessage name="firstName" className="alert alert-danger" component="p" />
+                                                    <ErrorMessage name="firstName" className="invalid-feedback" component="div" />
                                                 </div>
                                             </div>
                                             <div className="row g-12">
                                                 <div className="col">
-                                                    <label htmlFor="lastName" className="form-label">Last Name</label>
+                                                    <label htmlFor="lastName" className="form-label">Apellido</label>
                                                     <Field type="text" className={`form-control ${!errors.lastName ? '' : ' is-invalid' } `} name="lastName" placeholder="Last Name" />
-                                                    <ErrorMessage className="alert alert-danger" name="lastName" component="p" />
+                                                    <ErrorMessage className="invalid-feedback" name="lastName" component="div" />
                                                 </div>
                                             </div>
                                             <div className="row g-3">
                                                 <div className="col-sm-12">
-                                                    <label htmlFor="email" className="form-label">Phone</label>
+                                                    <label htmlFor="email" className="form-label">Teléfono</label>
                                                     <Field type="text" className={`form-control ${!errors.phone ? '' : ' is-invalid' } `} name="phone" placeholder="Phone Number" />
-                                                    <ErrorMessage className="alert alert-danger"name="phone" component="p" />
+                                                    <ErrorMessage className="invalid-feedback"name="phone" component="div" />
+                                                    <div id="phoneHelp" class="form-text">Debe ser solo numeros o guines y debe tener como maximo 12 digitos. Ej.</div>
                                                 </div>
                                             </div>
                                             <div className="row mt-4">
