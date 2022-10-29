@@ -16,6 +16,18 @@ corroborar que sea correcto), debe activarse el botón de ‘realizar compra’.
 - Al clickear ‘realizar compra’ debe guardarse en la base de datos una orden que
 tenga todos los productos, la fecha y dar feedback del número de orden.
 
+## Objetivos extras incluidos
+
+- Stock check: Validar stock al momento de intentar generar la order.
+- Categories dinámicas: crear una colección de firebase para las categorías e
+hidratar el menú en base a eso.
+- Mis órdenes: Con el orderId que se entrega al final de la compra, el usuario
+podría buscar su orden y usar el componente que ya utilizaste para el detalle,
+para mostrar cómo quedó conformada la order y el precio, pero no mostrar
+datos personales de la compra.
+
+## Video de demostracion de la app
+En [youtube](https://www.youtube.com/watch?v=9RGtJLMpeFw)
 ## Prerequisitos
 You’ll need to have Node >= 14 on your local development machine (but it’s not required on the server). You can use nvm (macOS/Linux) or nvm-windows to switch Node versions between different projects.
 
@@ -58,6 +70,7 @@ Hay una coleccion de categorias con el siguiente formato: \
     ]
 
 Y otra coleccion para productos \
+
     products = [{ \
         name: 'NIGHT SUIT', \
         description: 'NIGHT SUIT RED MICKY MOUSE..  For Girls. Fantastic Suits.', \
