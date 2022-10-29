@@ -44,9 +44,9 @@ export const createOrder = async (values, cart, cartTotal, totalQuantity, status
 
             const orderRef = collection(db, 'orders')
             const orderAdded = await addDoc(orderRef, objOrder)
-
+            console.log(orderAdded, orderAdded.id);
             return new Promise(function(resolve, reject) {
-                  resolve(orderAdded);
+                  resolve(orderAdded.id);
               });
         } else {
             return new Promise(function(resolve, reject) {
