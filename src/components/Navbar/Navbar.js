@@ -1,34 +1,11 @@
-import { Store } from 'react-notifications-component';
 import { Link, NavLink } from "react-router-dom"
-import { useState,useEffect } from "react"
 import { getCategories } from '../../services/firebase/firestore'
 import logo from './logo.svg';
 import CartWidget from '../CartWidget/CartWidget';
-
+import { useAsync } from '../../hooks/useAsync';
 import './Navbar.css'
 const NavBar = () => {
-    const [categories, setCategories] = useState([])
-    useEffect(() => {
-        getCategories().then(categories => {
-            setCategories(categories)
-        }).catch( error => {
-            console.error('error', error);
-            Store.addNotification({
-                title: "Error!",
-                message: `Error de conexion intente mas tarde`,
-                type: "error",
-                insert: "top",
-                container: "top-right",
-                animationIn: ["animate__animated", "animate__fadeIn"],
-                animationOut: ["animate__animated", "animate__fadeOut"],
-                dismiss: {
-                duration: 5000,
-                onScreen: true
-                }
-            })
-        })
-
-    }, [])
+    const {data: categories } = useAsync(() => getCategories(), [])
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">

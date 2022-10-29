@@ -83,6 +83,7 @@ export const getProduct = ((productId) => {
             const productAdapted = data !== undefined ? {id: doc.id, ...data} : false
             resolve(productAdapted);
         }).catch( error => {
+            console.log('error', error)
             reject(error)
         })
     })

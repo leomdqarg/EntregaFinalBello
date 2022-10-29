@@ -1,40 +1,13 @@
-import { Store } from 'react-notifications-component';
-import { useState,useEffect } from "react"
 import { useParams } from 'react-router-dom'
 import { getProducts } from '../../services/firebase/firestore';
 import ItemCard from "../ItemCard/ItemCard"
 import Loading from "../Loading/Loading"
+import { useAsync } from '../../hooks/useAsync';
 
 const ItemListContainer = ({greetings, showAlert=0}) => {
 
-    const [items, setItems] = useState([])
-    const [loading, setLoading] = useState(true)
-
     const {categoryId} = useParams()
-
-    useEffect(() => {
-        setLoading(true)
-        getProducts(categoryId).then(products => {
-            setItems(products)
-        }).catch(error => {
-            Store.addNotification({
-                title: "Error!",
-                message: `Error. Intente mas tarde`,
-                type: "error",
-                insert: "top",
-                container: "top-right",
-                animationIn: ["animate__animated", "animate__fadeIn"],
-                animationOut: ["animate__animated", "animate__fadeOut"],
-                dismiss: {
-                  duration: 5000,
-                  onScreen: true
-                }
-              })
-        }).finally( () => {
-            setLoading(false)
-        })
-
-    }, [categoryId])
+    const { data: items, loading } = useAsync(() => getProducts(categoryId), [categoryId])
 
     if (loading) {
         return (<Loading />)
@@ -49,7 +22,7 @@ const ItemListContainer = ({greetings, showAlert=0}) => {
                         </div>
                         ) : (
                         <div className="row row-cols row-cols-12 justify-content-center">
-                            <h2 className="justify-content-center">{greetings}</h2>
+                            <h2 className="display-4 justify-content-center">{greetings}</h2>
                         </div>
                         )
                 }
