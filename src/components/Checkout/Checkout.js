@@ -9,7 +9,7 @@ const Checkout = () => {
     const { cart, getTotalQuantity, getCartTotal, emptyCart } = useContext(CartContext)
     const totalQuantity = getTotalQuantity()
     const cartTotal = getCartTotal()
-    const [orderId, setOrderId] = useState('')
+    const [orderId, setOrderId] = useState()
 
     if (totalQuantity === 0 && !orderId) {
         return (<ItemListContainer showAlert={1} greetings="No hay productos en el carrito." />)
@@ -152,7 +152,7 @@ const Checkout = () => {
                                                     <label htmlFor="email" className="form-label">Teléfono</label>
                                                     <Field type="text" className={`form-control ${!errors.phone ? '' : ' is-invalid' } `} name="phone" placeholder="Phone Number" />
                                                     <ErrorMessage className="invalid-feedback"name="phone" component="div" />
-                                                    <div id="phoneHelp" class="form-text">Debe ser solo numeros o guines y debe tener como maximo 12 digitos. Ej.</div>
+                                                    <div id="phoneHelp" className="form-text">Debe ser solo numeros o guines y debe tener como maximo 12 digitos. Ej.</div>
                                                 </div>
                                             </div>
                                             <div className="row mt-4">
