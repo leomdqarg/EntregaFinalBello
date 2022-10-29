@@ -52,34 +52,34 @@ const Checkout = () => {
                                     validate={values => {
                                         const errors = {};
                                         if (!values.email) {
-                                            errors.email = 'Required';
+                                            errors.email = 'Debe completar este campo';
                                         } else if (
                                             !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
                                         ) {
-                                            errors.email = 'Invalid email address';
+                                            errors.email = 'Verifique el formato de la direccion de correo ';
                                         }
                                         if (!values.emailRepeated) {
-                                        errors.emailRepeated = 'Required';
+                                        errors.emailRepeated = 'Debe completar este campo';
                                         } else if (
                                         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.emailRepeated)
                                         ) {
-                                        errors.emailRepeated = 'Invalid email address';
+                                        errors.emailRepeated = 'Verifique el formato de la direccion de correo ';
                                         }
                                         if(!errors.emailRepeated && !errors.email && values.email !== values.emailRepeated) {
-                                            errors.emailRepeated = 'Email and Email Repetead must be the same';
+                                            errors.emailRepeated = 'Las direcciones de correo de electronico no coinciden.';
                                         }
                                         if (!values.firstName) {
-                                            errors.firstName = 'Required'
+                                            errors.firstName = 'Debe completar este campo';
                                         }
                                         if (!values.lastName) {
-                                            errors.lastName = 'Required'
+                                            errors.lastName = 'Debe completar este campo';
                                         }
                                         if (!values.phone) {
-                                            errors.phone = 'Required'
+                                            errors.phone = 'Debe completar este campo';
                                         } else if (
                                             !/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im.test(values.phone)
                                         ) {
-                                            errors.phone = 'Invalid phone number'
+                                            errors.phone = 'Formato de telefono erroneo. Debe ser solo numeros o guines y debe tener maximo 12 digitos. Ej. 123-456-12345 ó 1234567890'
                                         }
 
 
