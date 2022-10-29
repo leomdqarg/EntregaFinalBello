@@ -1,8 +1,7 @@
 import { Store } from 'react-notifications-component';
-import { getDocs, collection, query, where } from 'firebase/firestore'
-import { db } from '../../services/firebase'
 import { useState,useEffect } from "react"
 import { useParams } from 'react-router-dom'
+import { getProducts } from '../../services/firebase/firestore';
 import ItemCard from "../ItemCard/ItemCard"
 import Loading from "../Loading/Loading"
 
@@ -15,19 +14,12 @@ const ItemListContainer = ({greetings, showAlert=0}) => {
 
     useEffect(() => {
         setLoading(true)
-        const collectionRef = categoryId ? query(collection(db, 'products'), where('category', '==', categoryId)) : collection(db, 'products')
-
-        getDocs(collectionRef).then(response => {
-            const productsAdapted = response.docs.map(doc => {
-                const data = doc.data()
-                return { id: doc.id, ...data}
-            })
-            setItems(productsAdapted)
-        }).catch( error => {
-            console.log(error)
+        getProducts(categoryId).then(products => {
+            setItems(products)
+        }).catch(error => {
             Store.addNotification({
                 title: "Error!",
-                message: `Error de conexion intente mas tarde`,
+                message: `Error. Intente mas tarde`,
                 type: "error",
                 insert: "top",
                 container: "top-right",

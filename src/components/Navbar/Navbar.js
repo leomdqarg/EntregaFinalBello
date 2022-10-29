@@ -1,8 +1,7 @@
 import { Store } from 'react-notifications-component';
 import { Link, NavLink } from "react-router-dom"
-import { getDocs, collection, query, orderBy } from 'firebase/firestore'
 import { useState,useEffect } from "react"
-import { db } from '../../services/firebase'
+import { getCategories } from '../../services/firebase/firestore'
 import logo from './logo.svg';
 import CartWidget from '../CartWidget/CartWidget';
 
@@ -10,13 +9,8 @@ import './Navbar.css'
 const NavBar = () => {
     const [categories, setCategories] = useState([])
     useEffect(() => {
-        const collectionRef = query(collection(db, 'categories'), orderBy('name'))
-        getDocs(collectionRef).then( response => {
-                const categoriesAdapted = response.docs.map(doc => {
-                const data = doc.data()
-                return {id: doc.id, ...data}
-            })
-            setCategories(categoriesAdapted)
+        getCategories().then(categories => {
+            setCategories(categories)
         }).catch( error => {
             console.error('error', error);
             Store.addNotification({
@@ -28,11 +22,12 @@ const NavBar = () => {
                 animationIn: ["animate__animated", "animate__fadeIn"],
                 animationOut: ["animate__animated", "animate__fadeOut"],
                 dismiss: {
-                  duration: 5000,
-                  onScreen: true
+                duration: 5000,
+                onScreen: true
                 }
-              })
+            })
         })
+
     }, [])
 
     return (

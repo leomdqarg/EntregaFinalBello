@@ -1,75 +1,16 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useState } from "react";
-import { useContext } from "react"
+import { useState, useContext } from "react";
 import { CartContext } from "../../context/CartContext"
-import { getDocs, addDoc, collection, where, query, documentId, writeBatch } from 'firebase/firestore'
-import { db } from '../../services/firebase'
 import { Store } from 'react-notifications-component';
 import { FormatPrice } from '../../Helpers/FormatPrice';
+import { createOrder } from '../../services/firebase/firestore';
 import ItemListContainer from '../ItemListContainer/ItemListContainer'
-
 const Checkout = () => {
     const { cart, getTotalQuantity, getCartTotal, emptyCart } = useContext(CartContext)
     const totalQuantity = getTotalQuantity()
     const cartTotal = getCartTotal()
     const [orderId, setOrderId] = useState('')
 
-    const createOrder = async (values) => {
-        try {
-            const objOrder = {
-                buyer: {
-                    email: values.email,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    phone: values.phone,
-                },
-                items: cart,
-                total: cartTotal
-            }
-            const ids = cart.map(prod => prod.id)
-            const productsRef = collection(db, 'products')
-
-            const productsAddedFromFirestore = await getDocs(query(productsRef, where(documentId(), 'in' , ids)))
-            const { docs } = productsAddedFromFirestore
-
-            const batch = writeBatch(db)
-
-            const outOfStock = []
-
-            docs.forEach(doc => {
-                const dataDoc = doc.data()
-                const stockDb = dataDoc.stock
-
-                const productAddedToCart = cart.find(prod => prod.id === doc.id)
-                const prodQuantity = productAddedToCart?.quantity
-
-                if(stockDb >= prodQuantity) {
-                    batch.update(doc.ref, { stock: stockDb - prodQuantity })
-                } else {
-                    outOfStock.push({ id: doc.id, ...dataDoc})
-                }
-            })
-
-            if(outOfStock.length === 0) {
-                await batch.commit()
-
-                const orderRef = collection(db, 'orders')
-                const orderAdded = await addDoc(orderRef, objOrder)
-
-                return new Promise(function(resolve, reject) {
-                      resolve(orderAdded);
-                  });
-            } else {
-                return new Promise(function(resolve, reject) {
-                      reject(Error("Hay productos fuera de stock"));
-                  });
-            }
-        } catch (error) {
-            return new Promise(function(resolve, reject) {
-                  reject(Error("Error"));
-              });
-        }
-    }
     if (totalQuantity === 0 && !orderId) {
         return (<ItemListContainer showAlert={1} greetings="No hay productos en el carrito." />)
     }
@@ -111,34 +52,34 @@ const Checkout = () => {
                                     validate={values => {
                                         const errors = {};
                                         if (!values.email) {
-                                            errors.email = 'Debe completar este campo';
+                                            errors.email = 'Required';
                                         } else if (
                                             !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
                                         ) {
-                                            errors.email = 'Verifique el formato de la direccion de correo ';
+                                            errors.email = 'Invalid email address';
                                         }
                                         if (!values.emailRepeated) {
-                                        errors.emailRepeated = 'Debe completar este campo';
+                                        errors.emailRepeated = 'Required';
                                         } else if (
                                         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.emailRepeated)
                                         ) {
-                                        errors.emailRepeated = 'Verifique el formato de la direccion de correo ';
+                                        errors.emailRepeated = 'Invalid email address';
                                         }
                                         if(!errors.emailRepeated && !errors.email && values.email !== values.emailRepeated) {
-                                            errors.emailRepeated = 'Las direcciones de correo de electronico no coinciden.';
+                                            errors.emailRepeated = 'Email and Email Repetead must be the same';
                                         }
                                         if (!values.firstName) {
-                                            errors.firstName = 'Debe completar este campo';
+                                            errors.firstName = 'Required'
                                         }
                                         if (!values.lastName) {
-                                            errors.lastName = 'Debe completar este campo';
+                                            errors.lastName = 'Required'
                                         }
                                         if (!values.phone) {
-                                            errors.phone = 'Debe completar este campo';
+                                            errors.phone = 'Required'
                                         } else if (
                                             !/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im.test(values.phone)
                                         ) {
-                                            errors.phone = 'Formato de telefono erroneo. Debe ser solo numeros o guines y debe tener maximo 12 digitos. Ej. 123-456-12345 ó 1234567890'
+                                            errors.phone = 'Invalid phone number'
                                         }
 
 
@@ -146,13 +87,13 @@ const Checkout = () => {
                                     }}
                                     onSubmit={(values, { setSubmitting }) => {
 
-                                        const createOrderId = createOrder(values).then(order => {
-                                            console.log('res165', order.id);
+                                        createOrder(values, cart, cartTotal).then(order => {
                                             setOrderId(order.id)
                                             emptyCart()
                                         }).catch(error => {
+                                            console.error(error)
                                             Store.addNotification({
-                                                title: "Error.",
+                                                title: "Error de red",
                                                 message: 'No se pudo realizar el pedido. Intente luego',
                                                 type: "warning",
                                                 insert: "top",
@@ -167,47 +108,50 @@ const Checkout = () => {
                                         }).finally(() => {
                                             setSubmitting(false)
                                         })
-                                        console.log('createOrderId', createOrderId)
                                     }}
                                 >
                                     {({
+                                        values,
                                         errors,
+                                        touched,
+                                        handleChange,
+                                        handleBlur,
+                                        handleSubmit,
                                         isSubmitting,
                                         /* and other goodies */
                                     }) => (
                                         <Form>
                                             <div className="row g-3">
                                                 <div className="col-sm-6">
-                                                    <label htmlFor="email" className="form-label">Correo Electronico</label>
+                                                    <label htmlFor="email" className="form-label">Email</label>
                                                     <Field type="email" name="email" className={`form-control ${!errors.email ? '' : ' is-invalid' } `} placeholder="Email" />
-                                                        <ErrorMessage name="email" className="invalid-feedback" component="div" />
+                                                        <ErrorMessage name="email" className="alert alert-danger" component="p" />
                                                 </div>
                                                 <div className="col-sm-6">
-                                                    <label htmlFor="email" className="form-label">Repita el Correo Electronico</label>
+                                                    <label htmlFor="email" className="form-label">Repeat Email</label>
                                                     <Field type="email" name="emailRepeated" className={`form-control ${!errors.emailRepeated ? '' : ' is-invalid' } `} placeholder="Repeat Email" />
-                                                    <ErrorMessage name="emailRepeated" className="invalid-feedback" component="div" />
+                                                    <ErrorMessage name="emailRepeated" className="alert alert-danger" component="p" />
                                                 </div>
                                             </div>
                                             <div className="row g-12">
                                                 <div className="col">
-                                                    <label htmlFor="firstName" className="form-label">Nombre</label>
+                                                    <label htmlFor="firstName" className="form-label">First Name</label>
                                                     <Field type="text" className={`form-control ${!errors.firstName ? '' : ' is-invalid' } `} name="firstName" placeholder="First Name" />
-                                                    <ErrorMessage name="firstName" className="invalid-feedback" component="div" />
+                                                    <ErrorMessage name="firstName" className="alert alert-danger" component="p" />
                                                 </div>
                                             </div>
                                             <div className="row g-12">
                                                 <div className="col">
-                                                    <label htmlFor="lastName" className="form-label">Apellido</label>
+                                                    <label htmlFor="lastName" className="form-label">Last Name</label>
                                                     <Field type="text" className={`form-control ${!errors.lastName ? '' : ' is-invalid' } `} name="lastName" placeholder="Last Name" />
-                                                    <ErrorMessage className="invalid-feedback" name="lastName" component="div" />
+                                                    <ErrorMessage className="alert alert-danger" name="lastName" component="p" />
                                                 </div>
                                             </div>
                                             <div className="row g-3">
                                                 <div className="col-sm-12">
-                                                    <label htmlFor="email" className="form-label">Teléfono</label>
+                                                    <label htmlFor="email" className="form-label">Phone</label>
                                                     <Field type="text" className={`form-control ${!errors.phone ? '' : ' is-invalid' } `} name="phone" placeholder="Phone Number" />
-                                                    <ErrorMessage className="invalid-feedback"name="phone" component="div" />
-                                                    <div id="phoneHelp" class="form-text">Debe ser solo numeros o guines y debe tener como maximo 12 digitos. Ej.</div>
+                                                    <ErrorMessage className="alert alert-danger"name="phone" component="p" />
                                                 </div>
                                             </div>
                                             <div className="row mt-4">
