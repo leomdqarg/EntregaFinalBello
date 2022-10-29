@@ -1,11 +1,10 @@
-import { useParams } from "react-router-dom"
-import ItemListContainer from '../ItemListContainer/ItemListContainer'
+import { useParams } from 'react-router-dom'
 import ItemDetail from '../ItemDetail/ItemDetail'
-import Loading from "../Loading/Loading"
-import { getProduct } from "../../services/firebase/firestore";
-import { useAsync } from "../../hooks/useAsync";
-const ItemDetailContainer = () => {
+import Loading from '../Loading/Loading'
+import { getProduct } from '../../services/firebase/firestore'
+import { useAsync } from '../../hooks/useAsync'
 
+const ItemDetailContainer = () => {
     const { itemId } = useParams()
     const { data: item, loading } = useAsync(() => getProduct(itemId), [itemId])
 
@@ -23,11 +22,8 @@ const ItemDetailContainer = () => {
             </section>
         )
     }
-
     return (<ItemDetail {...item} />)
-
-
-  }
+}
 
 export default ItemDetailContainer;
 

@@ -1,10 +1,12 @@
-import { Link, NavLink } from "react-router-dom"
+import { Link, NavLink } from 'react-router-dom'
 import { getCategories } from '../../services/firebase/firestore'
-import logo from './logo.svg';
-import CartWidget from '../CartWidget/CartWidget';
-import { useAsync } from '../../hooks/useAsync';
+import logo from './logo.svg'
+import CartWidget from '../CartWidget/CartWidget'
+import { useAsync } from '../../hooks/useAsync'
 import './Navbar.css'
+
 const NavBar = () => {
+
     const {data: categories } = useAsync(() => getCategories(), [])
 
     return (
@@ -34,7 +36,7 @@ const NavBar = () => {
             </div>
         </nav>
     );
-  }
+}
 
 export default NavBar;
 

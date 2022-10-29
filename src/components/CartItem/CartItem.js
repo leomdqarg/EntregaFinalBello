@@ -1,12 +1,14 @@
-import { useContext } from "react"
-import { CartContext } from "../../context/CartContext"
-import { FormatPrice } from "../../Helpers/FormatPrice"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Store } from 'react-notifications-component';
+
+import { FormatPrice } from '../../Helpers/FormatPrice'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { Store } from 'react-notifications-component'
+import { useCart } from '../../context/CartContext'
 
 const CartItem = ({id, name, img, price, quantity}) => {
-    const { removeItem } = useContext(CartContext)
+
+    const { removeItem } = useCart()
+
     const handleRemoveItem = () => {
         const productRemoved =  removeItem(id);
         Store.addNotification({

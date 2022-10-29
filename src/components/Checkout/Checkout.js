@@ -1,12 +1,14 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useState, useContext } from "react";
-import { CartContext } from "../../context/CartContext"
-import { Store } from 'react-notifications-component';
-import { FormatPrice } from '../../Helpers/FormatPrice';
-import { createOrder } from '../../services/firebase/firestore';
+import { useState } from 'react'
+import { Store } from 'react-notifications-component'
+import { useCart } from '../../context/CartContext'
+import { FormatPrice } from '../../Helpers/FormatPrice'
+import { createOrder } from '../../services/firebase/firestore'
 import ItemListContainer from '../ItemListContainer/ItemListContainer'
+
 const Checkout = () => {
-    const { cart, getTotalQuantity, getCartTotal, emptyCart } = useContext(CartContext)
+
+    const { cart, getTotalQuantity, getCartTotal, emptyCart } = useCart()
     const totalQuantity = getTotalQuantity()
     const cartTotal = getCartTotal()
     const [orderId, setOrderId] = useState()

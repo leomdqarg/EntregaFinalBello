@@ -1,12 +1,12 @@
-import { useContext } from "react"
-import { CartContext } from "../../context/CartContext"
 import CartItem from '../CartItem/CartItem'
-import ItemListContainer from "../ItemListContainer/ItemListContainer"
-import { Link } from "react-router-dom"
-import { FormatPrice } from "../../Helpers/FormatPrice"
+import ItemListContainer from '../ItemListContainer/ItemListContainer'
+import { Link } from 'react-router-dom'
+import { FormatPrice } from '../../Helpers/FormatPrice'
+import { useCart } from '../../context/CartContext'
 
 const Cart = () => {
-    const { cart, getTotalQuantity, getCartTotal } = useContext(CartContext)
+
+    const { cart, getTotalQuantity, getCartTotal } = useCart()
     const totalQuantity = getTotalQuantity()
     const cartTotal = getCartTotal()
 

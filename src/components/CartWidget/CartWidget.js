@@ -1,11 +1,10 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
-import { useContext } from "react";
-import { CartContext } from "../../context/CartContext";
-import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom'
+import { useCart } from '../../context/CartContext'
 
 const CartWidget = () => {
-    const { getTotalQuantity } = useContext(CartContext)
+    const { getTotalQuantity } = useCart()
     const totalQuantity = getTotalQuantity()
     return (
         <div className="d-flex">

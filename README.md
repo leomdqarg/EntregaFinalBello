@@ -31,7 +31,7 @@ Necesitas tener [Node](https://nodejs.org/en/) version >= 14 en el entorno de de
 ## Instalaccion
 
 - Para instalar dependencias: npm install
-- Configuracion de Firebase/Firestore se provee un archivo de ejemplo .env.example reemplazar con los datos propios que se obtienen en [firebase/firestore](https://console.firebase.google.com/)
+- Configuracion de Firebase/Firestore se provee un archivo de ejemplo .env.example copiar a .env y reemplazar con los datos propios que se obtienen en [firebase/firestore](https://console.firebase.google.com/)
 
 ## En el directorio del proyecto puedes ejecutar:
 

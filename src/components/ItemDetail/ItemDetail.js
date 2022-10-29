@@ -1,15 +1,14 @@
-import { useState, useContext } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CartContext } from '../../context/CartContext'
 import { FormatPrice } from '../../Helpers/FormatPrice'
 import { Store } from 'react-notifications-component';
-import ItemCount from "../ItemCount/ItemCount.js"
+import { useCart } from '../../context/CartContext'
+import ItemCount from '../ItemCount/ItemCount.js'
 
 const ItemDetail = ({id, name, img, category, description, price, stock}) => {
 
     const [quantityToAdd, setQuantityToAdd] = useState(0)
-    const { addItem, getProductQuantity } = useContext(CartContext)
-
+    const { addItem, getProductQuantity } = useCart()
     const productAddedQuantity = getProductQuantity(id)
 
     const handleOnAdd = (quantity) => {

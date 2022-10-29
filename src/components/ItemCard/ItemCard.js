@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom"
-import { FormatPrice } from "../../Helpers/FormatPrice"
+import { Link } from 'react-router-dom'
+import { FormatPrice } from '../../Helpers/FormatPrice'
 const ItemCard = ({id, name, img, price}) => {
 
 return (

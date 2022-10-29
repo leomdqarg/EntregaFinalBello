@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom'
-import { getProducts } from '../../services/firebase/firestore';
-import ItemCard from "../ItemCard/ItemCard"
-import Loading from "../Loading/Loading"
-import { useAsync } from '../../hooks/useAsync';
+import { getProducts } from '../../services/firebase/firestore'
+import ItemCard from '../ItemCard/ItemCard'
+import Loading from '../Loading/Loading'
+import { useAsync } from '../../hooks/useAsync'
 
 const ItemListContainer = ({greetings, showAlert=0}) => {
 
@@ -43,7 +43,7 @@ const ItemListContainer = ({greetings, showAlert=0}) => {
             </div>
         </section>
     );
-  }
+}
 
 export default ItemListContainer
 
